@@ -5,9 +5,19 @@ import {
   ifExistsInLocalStorage,
 } from "./localStorage.js";
 
+import { displayChart } from "./chart.js";
 const state = {};
 const continents = {};
-
+const countriesWrap = document.createElement("div");
+const container = document.getElementById("container");
+const buttons = document.querySelector(".buttons");
+countriesWrap.addEventListener("click", (e) => {
+  const selectedCountry = state.selectedContinent.find((country) => {
+    return country.name === e.target.innerText;
+  });
+  state.selectedCountry = selectedCountry;
+  console.log(state);
+});
 export async function initApp() {
   //To sperate to 2 function
 
@@ -28,6 +38,64 @@ export async function initApp() {
   combinedCountriesWithContinent();
 }
 
+const handleCovidStatsBtn = (e) => {
+  if (e.target.localName === "button") {
+    state.statistic = e.target.innerText;
+    displayChart(state);
+  }
+};
+
+const createStatsButtons = () => {
+  if (buttons.children.length <= 1) {
+    const div = document.createElement("div");
+
+    const statusButtons = Object.keys(
+      state.covidCountriesStatistics[0].latest_data
+    );
+
+    for (const statusBtn of statusButtons) {
+      if (statusBtn !== "calculated") {
+        const btn = document.createElement("button");
+        btn.innerText = statusBtn;
+        div.appendChild(btn);
+      }
+    }
+    div.addEventListener("click", handleCovidStatsBtn);
+
+    buttons.prepend(div);
+  }
+};
+function handleContinentBtnClick(e) {
+  if (e.target.localName === "button") {
+    createStatsButtons();
+    state.continentChosenName = e.target.innerText;
+    const countriesInContinent = continents[e.target.innerText];
+    state.selectedContinent = countriesInContinent;
+    countriesWrap.innerText = "";
+    for (const country of countriesInContinent) {
+      const p = document.createElement("p");
+      p.innerText = `${country.name} `;
+      countriesWrap.appendChild(p);
+    }
+    container.appendChild(countriesWrap);
+    displayChart(state);
+  }
+}
+
+function createButtons() {
+  const continentDiv = document.createElement("div");
+
+  for (const continent of Object.keys(continents)) {
+    const btn = document.createElement("button");
+
+    btn.innerText = continent;
+
+    continentDiv.appendChild(btn);
+  }
+  continentDiv.addEventListener("click", handleContinentBtnClick);
+  buttons.appendChild(continentDiv);
+}
+
 function combinedCountriesWithContinent() {
   state.countries.forEach(({ region }) => {
     region ? (continents[region] = []) : null;
@@ -40,4 +108,6 @@ function combinedCountriesWithContinent() {
       }
     });
   });
+
+  createButtons();
 }
