@@ -29,7 +29,6 @@ export const displayChart = ({
       "Total Recovered",
       "In Critical Condition",
     ];
-    // labels.pop();
 
     for (const label of labels) {
       switch (label) {
@@ -55,8 +54,6 @@ export const displayChart = ({
           break;
       }
     }
-    // data = Object.values(selectedCountry.latest_data);
-    // data.pop();
 
     options = {
       plugins: {

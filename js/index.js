@@ -9,24 +9,15 @@ import { displayChart, destroyChart } from "./chart.js";
 const state = {};
 const continents = {};
 const countriesWrap = document.createElement("select");
-const container = document.getElementById("container");
 const buttons = document.querySelector(".buttons");
 const chartWrap = document.getElementById("chart-wrap");
-countriesWrap.addEventListener("change", (e) => {
-  const selectedCountry = state.selectedContinent.find((country) => {
-    return country.name === e.target.value;
-  });
-  state.selectedCountry = selectedCountry;
-
-  displayChart(state);
-  state.selectedCountry = "";
-});
+countriesWrap.addEventListener("change", handleSelectedCountry);
 export async function initApp() {
   //To sperate to 2 function
 
   if (!ifExistsInLocalStorage("covidCountriesStatistics")) {
     const covidCountriesStatistics = await getWorldwideCovidData();
-    console.log(covidCountriesStatistics);
+
     saveIntoLocalStorage(covidCountriesStatistics, "covidCountriesStatistics");
     state.covidCountriesStatistics = covidCountriesStatistics;
   } else
@@ -42,6 +33,17 @@ export async function initApp() {
   combinedCountriesWithContinent();
 }
 
+function handleSelectedCountry(e) {
+  {
+    const selectedCountry = state.selectedContinent.find((country) => {
+      return country.name === e.target.value;
+    });
+    state.selectedCountry = selectedCountry;
+    displayChart(state);
+    state.selectedCountry = "";
+  }
+}
+
 const handleCovidStatsBtn = (e) => {
   if (e.target.localName === "button") {
     state.statistic = e.target.innerText;
@@ -52,7 +54,6 @@ const handleCovidStatsBtn = (e) => {
 const createStatsButtons = () => {
   if (buttons.children.length <= 1) {
     const div = document.createElement("div");
-
     const statusButtons = Object.keys(
       state.covidCountriesStatistics[0].latest_data
     );
@@ -69,16 +70,14 @@ const createStatsButtons = () => {
     buttons.prepend(div);
   }
 };
+
 function handleContinentBtnClick(e) {
   if (e.target.localName === "button") {
     createStatsButtons();
     state.continentChosenName = e.target.innerText;
     const countriesInContinent = continents[e.target.innerText];
     state.selectedContinent = countriesInContinent;
-    const input = document.createElement("input");
-    // input.list = "select";
     countriesWrap.innerText = "";
-    countriesWrap.appendChild(input);
     for (const country of countriesInContinent) {
       const option = document.createElement("option");
       option.innerText = `${country.name}`;
@@ -86,7 +85,12 @@ function handleContinentBtnClick(e) {
       countriesWrap.appendChild(option);
     }
     countriesWrap.classList.add("countries-list");
-    // container.appendChild(countriesWrap);
+    if (!state.label) {
+      const p = document.createElement("p");
+      p.innerText = "Choose Country:";
+      chartWrap.appendChild(p);
+    }
+    state.label = true;
     chartWrap.appendChild(countriesWrap);
     displayChart(state);
   }
@@ -94,12 +98,9 @@ function handleContinentBtnClick(e) {
 
 function createButtons() {
   const continentDiv = document.createElement("div");
-
   for (const continent of Object.keys(continents)) {
     const btn = document.createElement("button");
-
     btn.innerText = continent;
-
     continentDiv.appendChild(btn);
   }
   continentDiv.addEventListener("click", handleContinentBtnClick);
@@ -112,8 +113,9 @@ function combinedCountriesWithContinent() {
   });
 
   state.covidCountriesStatistics.forEach((country) => {
-    state.countries.forEach(({ name: { common }, region }) => {
+    state.countries.forEach(({ name: { common }, region, ccn3 }) => {
       if (common === country.name && region) {
+        country.ccn3 = ccn3;
         continents[region].push(country);
       }
     });

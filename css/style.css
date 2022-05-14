@@ -15,21 +15,25 @@ body {
 #container {
   margin: 0 auto;
   display: flex;
+  text-align: center;
+  align-items: center;
   max-width: 95vw;
   flex-direction: column;
   gap: 1rem;
 }
 #chart-wrap {
-  max-height: 90vh;
-
-  display: flex;
+  /* max-height: 90vh; */
+  /* margin: 0 auto; */
+  /* max-width: 70vw; */
+  /* display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center; */
   /* gap: 2rem; */
+  min-width: 65vw;
+  max-width: 70vw;
 }
-#myChart {
-  max-height: 75vh;
-}
+/* #myChart {
+  /* max-height: 75vh; */
 
 #buttons-container {
   display: flex;
@@ -44,7 +48,7 @@ body {
 }
 
 .buttons > div {
-  margin: 1rem 0;
+  margin: 0.75rem 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -68,9 +72,11 @@ button:hover {
 }
 
 .countries-list {
-  display: block;
+  display: inline-block;
   padding: 0.5rem 1rem;
-  margin: 1rem auto;
+  margin: 0.85rem auto;
+  min-width: 30%;
+  max-width: 35%;
 }
 .rotate-msg {
   display: none;

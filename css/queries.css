@@ -2,6 +2,9 @@
   :root {
     font-size: 14px;
   }
+  #chart-wrap {
+    max-width: 90vw;
+  }
 }
 @media (max-width: 980px) {
   :root {
