@@ -8,5 +8,6 @@ export function getDataFromLocalStorage(storageName) {
 }
 
 export function ifExistsInLocalStorage(storageName) {
-  return localStorage[storageName];
+  if (localStorage[storageName] != undefined) return true;
+  return false;
 }
