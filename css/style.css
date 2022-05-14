@@ -30,9 +30,7 @@ body {
 #myChart {
   max-height: 75vh;
 }
-select {
-  /* background-color: #112b3c; */
-}
+
 #buttons-container {
   display: flex;
   flex-direction: column;
