@@ -5,18 +5,22 @@ import {
   ifExistsInLocalStorage,
 } from "./localStorage.js";
 
-import { displayChart } from "./chart.js";
+import { displayChart, destroyChart } from "./chart.js";
 const state = {};
 const continents = {};
-const countriesWrap = document.createElement("div");
+const countriesWrap = document.createElement("select");
 const container = document.getElementById("container");
 const buttons = document.querySelector(".buttons");
-countriesWrap.addEventListener("click", (e) => {
+const chartWrap = document.getElementById("chart-wrap");
+countriesWrap.addEventListener("change", (e) => {
+  console.log(e.target.value);
   const selectedCountry = state.selectedContinent.find((country) => {
-    return country.name === e.target.innerText;
+    return country.name === e.target.value;
   });
   state.selectedCountry = selectedCountry;
-  console.log(state);
+
+  displayChart(state);
+  state.selectedCountry = "";
 });
 export async function initApp() {
   //To sperate to 2 function
@@ -71,13 +75,19 @@ function handleContinentBtnClick(e) {
     state.continentChosenName = e.target.innerText;
     const countriesInContinent = continents[e.target.innerText];
     state.selectedContinent = countriesInContinent;
+    const input = document.createElement("input");
+    // input.list = "select";
     countriesWrap.innerText = "";
+    countriesWrap.appendChild(input);
     for (const country of countriesInContinent) {
-      const p = document.createElement("p");
-      p.innerText = `${country.name} `;
-      countriesWrap.appendChild(p);
+      const option = document.createElement("option");
+      option.innerText = `${country.name}`;
+      option.value = country.name;
+      countriesWrap.appendChild(option);
     }
-    container.appendChild(countriesWrap);
+    countriesWrap.classList.add("countries-list");
+    // container.appendChild(countriesWrap);
+    chartWrap.appendChild(countriesWrap);
     displayChart(state);
   }
 }
