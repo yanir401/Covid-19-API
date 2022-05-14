@@ -20,7 +20,6 @@ export const displayChart = ({
       data.push(country.latest_data[statisticToLoad]);
     }
   } else {
-    console.log(selectedCountry.today);
     type = "bar";
     labels = [
       "Total Cases",
@@ -33,7 +32,6 @@ export const displayChart = ({
     // labels.pop();
 
     for (const label of labels) {
-      console.log(selectedCountry);
       switch (label) {
         case "Total Cases":
           data.push(selectedCountry.latest_data["confirmed"]);
