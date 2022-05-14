@@ -26,6 +26,7 @@ export async function initApp() {
 
   if (!ifExistsInLocalStorage("covidCountriesStatistics")) {
     const covidCountriesStatistics = await getWorldwideCovidData();
+    console.log(covidCountriesStatistics);
     saveIntoLocalStorage(covidCountriesStatistics, "covidCountriesStatistics");
     state.covidCountriesStatistics = covidCountriesStatistics;
   } else
