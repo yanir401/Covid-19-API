@@ -13,7 +13,6 @@ const container = document.getElementById("container");
 const buttons = document.querySelector(".buttons");
 const chartWrap = document.getElementById("chart-wrap");
 countriesWrap.addEventListener("change", (e) => {
-  console.log(e.target.value);
   const selectedCountry = state.selectedContinent.find((country) => {
     return country.name === e.target.value;
   });
@@ -26,7 +25,6 @@ export async function initApp() {
   //To sperate to 2 function
 
   if (!ifExistsInLocalStorage("covidCountriesStatistics")) {
-    console.log("hi ");
     const covidCountriesStatistics = await getWorldwideCovidData();
     saveIntoLocalStorage(covidCountriesStatistics, "covidCountriesStatistics");
     state.covidCountriesStatistics = covidCountriesStatistics;
